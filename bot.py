@@ -65,6 +65,8 @@ send_order_keybord.row('В меню')
 communication_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
 communication_keybord.row('Telegram','WhatsUp','Viber')
 communication_keybord.row('Электронная почта', 'Телефон')
+communication_keybord.row('В меню')
+
 
 @bot.message_handler(commands=['start','help','menu'])
 def start_message(message):
@@ -119,19 +121,24 @@ def how_to_communicate_asker(message):
     chat_id = message.chat.id
     if message.text == 'Электронная почта':
       msg = bot.send_message(chat_id, 'Введите свою электронную почту')
+    elif message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Введите свой номер телефона')
-    bot.register_next_step_handler(msg,send_communication_order,message.text)
+    bot.register_next_step_handler(msg,send_communication_order,message.text,reply_markup=menu_keybord)
 
 #Отправка заявки на обратную связь в чат заявок
 def send_communication_order(message,commtype):
     chat_id = message.chat.id
-    username =  message.from_user.username
+    if message.text =='В меню':
+      bot.send_message(chat_id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      username =  message.from_user.username
 
-    t = Template('Заявка на обратную связь \nВремя отправки: $time \nUsername: @$username \nВариант связи: $commtype \nДанные: $contact')
-    
-    bot.send_message(watchers_chat_id,t.substitute(time = time,username=username,commtype=commtype,contact=message.text))
-    bot.send_message(chat_id,'Заявка принята, мы свяжемся с вами в ближайшее время',reply_markup=menu_keybord)
+      t = Template('Заявка на обратную связь \nВремя отправки: $time \nUsername: @$username \nВариант связи: $commtype \nДанные: $contact')
+
+      bot.send_message(watchers_chat_id,t.substitute(time = time,username=username,commtype=commtype,contact=message.text))
+      bot.send_message(chat_id,'Заявка принята, мы свяжемся с вами в ближайшее время',reply_markup=menu_keybord)
 
 #Проверка пользователем заявки на тест: отправка в чат заявок либо повторный ввод
 def send_or_rewrite_order(message):
@@ -144,6 +151,9 @@ def send_or_rewrite_order(message):
     elif message.text == 'Заполнить заного':
       msg = bot.send_message(message.chat.id, 'Ваше ФИО',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_name_step)
+    elif message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+      
 
 #1ый-Шаг заявки на тест (ФИО->Город)
 def proccess_name_step(message):
@@ -152,7 +162,7 @@ def proccess_name_step(message):
     chats_dict[chat_id] = User(message.text)
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Ваш город',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_city_step)
@@ -167,7 +177,7 @@ def proccess_city_step(message):
     chats_dict[chat_id].city = message.text
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Ваше предприятие',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_company_step)
@@ -182,7 +192,7 @@ def proccess_company_step(message):
     chats_dict[chat_id].company = message.text
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Ваша должность',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_position_step)
@@ -197,7 +207,7 @@ def proccess_position_step(message):
     chats_dict[chat_id].position = message.text
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Ваш номер телефона',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_phone_step)
@@ -212,7 +222,7 @@ def proccess_phone_step(message):
     chats_dict[chat_id].phone = message.text
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
       msg = bot.send_message(chat_id, 'Ваша электронная почта',reply_markup=go_menu_keybord)
       bot.register_next_step_handler(msg, proccess_email_step)
@@ -229,7 +239,7 @@ def proccess_email_step(message):
     username =  message.from_user.username
     
     if message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:  
       msg = bot.send_message(chat_id,'Проверьте данные в сформированной заявке')
       msg = bot.send_message(chat_id, getOrderData('Заявка на тестирование DPA',user,username),parse_mode="MARKDOWN",reply_markup=send_order_keybord)
