@@ -68,7 +68,7 @@ communication_keybord.row('Электронная почта', 'Телефон')
 
 @bot.message_handler(commands=['start','help','menu'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'Выбери интересующий пункт меню в',reply_markup=menu_keybord)
+    bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
 
 @bot.message_handler(content_types=['text'])
 def handle_message(message):
@@ -80,7 +80,7 @@ def handle_message(message):
       msg = bot.send_message(message.chat.id, 'Выберите как с вами связаться',reply_markup=communication_keybord)
       bot.register_next_step_handler(msg, how_to_communicate_asker)
     elif message.text =='В меню':
-      bot.send_message(message.chat.id, 'Выбери интересующий пункт меню',reply_markup=menu_keybord)
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     elif message.text == 'Скрипт внедрения':
       gdown.download(script_url_download, script_file_path, quiet=False) 
       doc = open(script_file_path, 'rb')
