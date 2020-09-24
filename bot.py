@@ -120,12 +120,12 @@ def handle_message(message):
 def how_to_communicate_asker(message):
     chat_id = message.chat.id
     if message.text == 'Электронная почта':
-      msg = bot.send_message(chat_id, 'Введите свою электронную почту')
+      msg = bot.send_message(chat_id, 'Введите свою электронную почту',reply_markup=go_menu_keybord)
     elif message.text =='В меню':
       bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
     else:
-      msg = bot.send_message(chat_id, 'Введите свой номер телефона')
-    bot.register_next_step_handler(msg,send_communication_order,message.text,reply_markup=menu_keybord)
+      msg = bot.send_message(chat_id, 'Введите свой номер телефона',reply_markup=go_menu_keybord)
+    bot.register_next_step_handler(msg,send_communication_order,message.text)
 
 #Отправка заявки на обратную связь в чат заявок
 def send_communication_order(message,commtype):
