@@ -19,8 +19,6 @@ watchers_chat_id = '-1001130791087' #ID канала, куда попадают 
 
 chats_dict = {} # Словарь чатиков
 
-time = datetime.datetime.now() #текущее время
-
 #Файл с информацией о ближайших вебинарах (кнопка "Ближайшие вебинары")
 seminars_url_download = 'https://drive.google.com/uc?id=1CugYOKgRjikNBbfn2JSGj8JnGMu5_PRz'
 seminars_file_name = 'Семинары.docx'
@@ -138,6 +136,7 @@ def send_communication_order(message,commtype):
     else:
       username =  message.from_user.username
 
+      time = datetime.datetime.now() #текущее время
       t = Template('Заявка на обратную связь \nВремя отправки: $time \nUsername: @$username \nВариант связи: $commtype \nДанные: $contact')
 
       bot.send_message(watchers_chat_id,t.substitute(time = time,username=username,commtype=commtype,contact=message.text))
@@ -253,6 +252,7 @@ def proccess_email_step(message):
 
 #Формирование заявки
 def getOrderData(title,user,username,with_time=False):
+    time = datetime.datetime.now() #текущее время
     if with_time:
       t = Template('$title \nВремя отправки: $time \nUsername: @$username \nФИО: $name \nГород: $city \nПредприятие: $company \nДолжность: $position \nТелефон: $phone \nЭлектронная почта: $email')
     else:
