@@ -61,7 +61,7 @@ send_order_keybord.row('В меню')
 
 #Свяжитесь со мной - клавиатура
 communication_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
-communication_keybord.row('Telegram','WhatsUp','Viber')
+communication_keybord.row('Telegram','WhatsApp','Viber')
 communication_keybord.row('Электронная почта', 'Телефон')
 communication_keybord.row('В меню')
 
