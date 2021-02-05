@@ -13,52 +13,251 @@ class User:
    for key in keys:
      self.key = None
 
-bot = telebot.TeleBot('1449765866:AAFgVKHseibuUDEPpw9EqY6_pNR5oDCeFYg') #Здесь наш токен от бота
+bot = telebot.TeleBot('1222713781:AAEPr9PeHeIrtqI1txgCxGWDyw7E1kac17I') #Здесь наш токен от бота
+
+watchers_chat_id = '-1001130791087' #ID канала, куда попадают заявки
+
+chats_dict = {} # Словарь чатиков
+
+#Файл с информацией о ближайших вебинарах (кнопка "Ближайшие вебинары")
+seminars_url_download = 'https://drive.google.com/uc?id=1CugYOKgRjikNBbfn2JSGj8JnGMu5_PRz'
+seminars_file_name = 'Семинары.docx'
+seminars_file_path = './'+seminars_file_name
+
+#Файл с информацией по информационным ресурсам (кнопка "Информационные ресурсы")
+socials_url_download = 'https://drive.google.com/uc?id=133Vghn24eI05qa3_yZVTFCF7sYSpZxF3'
+socials_file_name = 'Информационные ресурсы.docx'
+socials_file_path = './'+socials_file_name
+
+#Файл со скриптом внедрения (кнопка "Скрипт внедрения")
+script_url_download = 'https://drive.google.com/uc?id=1Nq3bVfuVYy-cBdwqDbGZdCVQ6jABz6ku'
+script_url_send = 'https://drive.google.com/file/d/1Nq3bVfuVYy-cBdwqDbGZdCVQ6jABz6ku/view'
+script_file_name = 'DPA.080.Программа внедрения DPA.pdf'
+script_file_path = './'+script_file_name
+
+#Файл с опросным листом (кнопка "Опросный лист")
+survey_url_download = 'https://drive.google.com/uc?id=14yAd8gr6yYWN2rawoQ7yHUaRYonCuSwX'
+survey_url_send = 'https://drive.google.com/file/d/14yAd8gr6yYWN2rawoQ7yHUaRYonCuSwX/view?usp=sharing'
+survey_file_name = 'Опросный лист.xlsx'
+survey_file_path = './'+survey_file_name
 
 ### Клавиатуры
 #Меню - клавиатура
 menu_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
-menu_keybord.row('Пункт 1 :)', 'Пункт 2 <3')
-menu_keybord.row('Пункт 3 (люблю тебя)', 'Пункт 4 ^^')
-menu_keybord.row('Пункт 5 (родная моя)', 'Пункт 6 (мур-мур)')
-menu_keybord.row('Пункт 7 (киса моя :*)', 'Пункт 8 (c -> NY)')
-menu_keybord.row('Пункт 9 (ты лучшая)', 'Пункт 10 (Ух, не устала? :>)')
-menu_keybord.row('Пункт 11 (финалочка)')
+menu_keybord.row('Подать заявку на бесплатный тест')
+menu_keybord.row('У меня есть вопрос, свяжитесь со мной')
+menu_keybord.row('Опросный лист', 'Скрипт внедрения')
+menu_keybord.row('Ближайшие вебинары','Информационные ресурсы')
+
+#В меню - клавиатура
+go_menu_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
+go_menu_keybord.row('В меню')
+
+#Подтверждение заявки - клавиатура#
+send_order_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
+send_order_keybord.row('Все верно. Отправить')
+send_order_keybord.row('Заполнить заного')
+send_order_keybord.row('В меню')
+
+#Свяжитесь со мной - клавиатура
+communication_keybord = telebot.types.ReplyKeyboardMarkup(True,True)
+communication_keybord.row('Telegram','WhatsApp','Viber')
+communication_keybord.row('Электронная почта', 'Телефон')
+communication_keybord.row('В меню')
 
 
 @bot.message_handler(commands=['start','help','menu'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'Выбирай пунктик в менюшке :)',reply_markup=menu_keybord)
+    bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
 
 @bot.message_handler(content_types=['text'])
 def handle_message(message):
   try:
-    if message.text=='Пункт 1 :)':
-      msg = bot.send_message(message.chat.id, 'ун отч? яанчонимзар, ежад итди адукин ен одан, от-огесв ьтунревереп аволс: атэ авкуб - яавреп авкуб аволс, огоннасипан ан екчилбат ан йондохв иревд хиовт йелетидор.',reply_markup=menu_keybord)
-    elif message.text=='Пункт 2 <3':
-      msg = bot.send_message(message.chat.id, 'Первая буква полного имени твоего любимого дяди, у которого не понять ещё: сколько времени, и день или ночь или че вообще :)))',reply_markup=menu_keybord)
-    elif message.text=='Пункт 3 (люблю тебя)':
-      msg = bot.send_message(message.chat.id, 'Спотифайчиком пользуешься? Тебе нужна первая буква имени (не псевдонима, а прямо имени C:) этого исполнителя: https://clck.ru/SghpZ',reply_markup=menu_keybord)
-    elif message.text=='Пункт 4 ^^':
-      msg = bot.send_message(message.chat.id, 'Послушала трек из предыдущего пункта (3)? В тексте упоминается одна песня, тебе нужна первая гласная буква русского прочтения имени её исполнителя.',reply_markup=menu_keybord)
-    elif message.text=='Пункт 5 (родная моя)':
-      msg = bot.send_message(message.chat.id, 'Что там тебе Артем подарил? Внутри было что-то интересное?',reply_markup=menu_keybord)
-    elif message.text=='Пункт 6 (мур-мур)':
-      msg = bot.send_message(message.chat.id, 'Ой, ну тут тебе халявка считай: напиши номер своей квартиры боту, он скажет тебе букву (не ту напишешь, будет молчать :D).',reply_markup=menu_keybord)
-    elif message.text=='293':
-      msg = bot.send_message(message.chat.id, 'Спасибочки. Твоя буковка: Й. С Наступающим, кста <3',reply_markup=menu_keybord)
-    elif message.text=='Пункт 7 (киса моя :*)':
-      msg = bot.send_message(message.chat.id, 'Ну, мы неплохо продвигаемся, я тебе скажу. Нужно бы передохнуть и выпить тебе Доброго Утра (доброе утро все-таки жи), там и буковка ещё одна для тебя в пачечке.',reply_markup=menu_keybord)
-    elif message.text=='Пункт 8 (c -> NY)':
-      msg = bot.send_message(message.chat.id, 'Под мягонькой пушистой штучкой, на которую ты любишь вставать на коленки :) для тебя ещё буковка.',reply_markup=menu_keybord)
-    elif message.text=='Пункт 9 (ты лучшая)':
-      msg = bot.send_message(message.chat.id, 'Надо посчитать по формулке, тебе нужна буква алфавита с номером: (сумма номеров алфавита букв твоего короткого четырех буквенного имени) минус (номер дня моего рождения, гы) минус (количество бутылочек сока стоящего в ближнем к тебе ряду: второй от стеночки ряд).',reply_markup=menu_keybord)
-    elif message.text=='Пункт 10 (Ух, не устала? :>)':
-      msg = bot.send_message(message.chat.id, 'В кармане твоей курточки карта, возьми в её названии вторую букву с конца ^^',reply_markup=menu_keybord)
-    elif message.text=='Пункт 11 (финалочка)':
-      msg = bot.send_message(message.chat.id, 'Cоставляй буквы пунктов в следующем порядке номеров пунктов: 1-10-3-7-9-4-8-2-5-6. А теперь топай лапками туда и забирай подарочек, с Наступающим, люблю тебя <3',reply_markup=menu_keybord)
+    if message.text=='Подать заявку на бесплатный тест':
+      msg = bot.send_message(message.chat.id, 'Ваше ФИО',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_name_step)
+    elif message.text == 'У меня есть вопрос, свяжитесь со мной':
+      msg = bot.send_message(message.chat.id, 'Выберите как с вами связаться',reply_markup=communication_keybord)
+      bot.register_next_step_handler(msg, how_to_communicate_asker)
+    elif message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    elif message.text == 'Скрипт внедрения':
+      gdown.download(script_url_download, script_file_path, quiet=False) 
+      doc = open(script_file_path, 'rb')
+      bot.send_document(message.chat.id, doc)
+      msg = bot.send_message(message.chat.id, script_url_send,reply_markup=menu_keybord)
+    elif message.text == 'Опросный лист':
+      gdown.download(survey_url_download, survey_file_path, quiet=False) 
+      doc = open(survey_file_path, 'rb')
+      bot.send_document(message.chat.id, doc)
+      msg = bot.send_message(message.chat.id, survey_url_send,reply_markup=menu_keybord)
+    elif message.text == 'Ближайшие вебинары':
+      gdown.download(seminars_url_download, seminars_file_path, quiet=False) 
+      doc = docx.Document(seminars_file_path) 
+      seminars_data = ""
+      fullText = []
+      for para in doc.paragraphs:
+        fullText.append(para.text)
+        seminars_data = '\n'.join(fullText)
+      msg = bot.send_message(message.chat.id, seminars_data,reply_markup=menu_keybord)
+    elif message.text == 'Информационные ресурсы':
+      gdown.download(socials_url_download, socials_file_path, quiet=False) 
+      doc = docx.Document(socials_file_path)
+      socials_data = ""
+      fullText = []
+      for para in doc.paragraphs:
+        fullText.append(para.text)
+        socials_data = '\n'.join(fullText)
+ 
+      msg = bot.send_message(message.chat.id, socials_data,reply_markup=menu_keybord)
+
+  except Exception as e:
+    bot.reply_to(message, 'exception')
+
+#Результат по кнопке "У меня есть вопрос, свяжитесь со мной"
+def how_to_communicate_asker(message):
+    chat_id = message.chat.id
+    if message.text == 'Электронная почта':
+      msg = bot.send_message(chat_id, 'Введите свою электронную почту',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg,send_communication_order,message.text)
+    elif message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Введите свой номер телефона',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg,send_communication_order,message.text)
+
+
+
+#Отправка заявки на обратную связь в чат заявок
+def send_communication_order(message,commtype):
+    chat_id = message.chat.id
+    if message.text =='В меню':
+      bot.send_message(chat_id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      username =  message.from_user.username
+
+      time = datetime.datetime.now() #текущее время
+      t = Template('Заявка на обратную связь \nВремя отправки: $time \nUsername: @$username \nВариант связи: $commtype \nДанные: $contact')
+
+      bot.send_message(watchers_chat_id,t.substitute(time = time,username=username,commtype=commtype,contact=message.text))
+      bot.send_message(chat_id,'Заявка принята, мы свяжемся с вами в ближайшее время',reply_markup=menu_keybord)
+
+#Проверка пользователем заявки на тест: отправка в чат заявок либо повторный ввод
+def send_or_rewrite_order(message):
+    if message.text == 'Все верно. Отправить':
+      chat_id = message.chat.id
+      user = chats_dict[chat_id]
+      username =  message.from_user.username
+      msg = bot.send_message(watchers_chat_id, getOrderData('Заявка на тестирование DPA',user,username,True),parse_mode="MARKDOWN")
+      msg = bot.send_message(message.chat.id, 'Ваша заявка успешно отправлена, мы скоро свяжемся с вами',reply_markup=menu_keybord)   
+    elif message.text == 'Заполнить заного':
+      msg = bot.send_message(message.chat.id, 'Ваше ФИО',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_name_step)
+    elif message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+      
+
+#1ый-Шаг заявки на тест (ФИО->Город)
+def proccess_name_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id] = User(message.text)
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Ваш город',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_city_step)
+
+  except Exception as e:
+    bot.reply_to(message, 'exception')
+
+#2ый-Шаг заявки на тест (Город->Предприятие)
+def proccess_city_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id].city = message.text
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Ваше предприятие',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_company_step)
     
   except Exception as e:
     bot.reply_to(message, 'exception')
+
+#3ый-Шаг заявки на тест (Предприятие->Должность)
+def proccess_company_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id].company = message.text
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Ваша должность',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_position_step)
+      
+  except Exception as e:
+    bot.reply_to(message, 'exception')
+
+#4ый-Шаг заявки на тест (Должность->Телефон)
+def proccess_position_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id].position = message.text
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Ваш номер телефона',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_phone_step)
+  
+  except Exception as e:
+    bot.reply_to(message, 'exception')
+
+#5ый-Шаг заявки на тест (Телефон->Электронная почта)
+def proccess_phone_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id].phone = message.text
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:
+      msg = bot.send_message(chat_id, 'Ваша электронная почта',reply_markup=go_menu_keybord)
+      bot.register_next_step_handler(msg, proccess_email_step)
+  
+  except Exception as e:
+    bot.reply_to(message, 'exception')
+
+#6ый-Шаг заявки на тест (Элктронная почта->Проверка данных)
+def proccess_email_step(message):
+  try:
+    chat_id = message.chat.id
+    chats_dict[chat_id].email = message.text
+    user = chats_dict[chat_id]
+    username =  message.from_user.username
+    
+    if message.text =='В меню':
+      bot.send_message(message.chat.id, 'Выберите интересующий пункт меню',reply_markup=menu_keybord)
+    else:  
+      msg = bot.send_message(chat_id,'Проверьте данные в сформированной заявке')
+      msg = bot.send_message(chat_id, getOrderData('Заявка на тестирование DPA',user,username),parse_mode="MARKDOWN",reply_markup=send_order_keybord)
+      bot.register_next_step_handler(msg, send_or_rewrite_order)
+
+  except Exception as e:
+    bot.reply_to(message, 'exception')   
+
+#Формирование заявки
+def getOrderData(title,user,username,with_time=False):
+    time = datetime.datetime.now() #текущее время
+    if with_time:
+      t = Template('$title \nВремя отправки: $time \nUsername: @$username \nФИО: $name \nГород: $city \nПредприятие: $company \nДолжность: $position \nТелефон: $phone \nЭлектронная почта: $email')
+    else:
+      t = Template('$title \nUsername: @$username \nФИО: $name \nГород: $city \nПредприятие: $company \nДолжность: $position \nТелефон: $phone \nЭлектронная почта: $email')
+
+    return t.substitute(title=title,time = time,username=username,name=user.name,city=user.city,company=user.company,position=user.position,phone=user.phone, email=user.email)
 
 bot.polling()
