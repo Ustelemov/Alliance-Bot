@@ -1,1 +1,1 @@
-Тестовый бот в телеграмм для дилера Альянс
+Telegram bot for creating request of product presentation
